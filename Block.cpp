@@ -20,7 +20,7 @@ void Block::buildMerkleTree() {
         txData.push_back(tx.getTransactionId());
     }
 
-    MerkleTree tree(txData);
+    LibBitcoinMerkle tree(txData);
     string merkleRoot = tree.getRootHash();
 
     header.setMerkleRoot(merkleRoot);

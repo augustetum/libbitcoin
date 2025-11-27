@@ -6,7 +6,7 @@
 #include <atomic>
 #include "BlockHeader.h"
 #include "Transaction.h"
-#include "merkleTree.h"
+#include "libbitcoinMerkle.h"
 using namespace std;
 
 class Block {

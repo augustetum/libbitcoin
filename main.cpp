@@ -1,5 +1,5 @@
 #include "customGenerator.h"
-#include "merkleTree.h"
+#include "libbitcoinMerkle.h"
 #include <iostream>
 #include <vector>
 
@@ -16,7 +16,7 @@ int main() {
         std::cout << "Creating Merkle Tree with " << data.size() << " transactions" << std::endl;
         
         // Create Merkle Tree
-        MerkleTree tree(data);
+        LibBitcoinMerkle tree(data);
         std::cout << std::endl;
         std::cout << "Root Hash: " << tree.getRootHash() << std::endl;
         std::cout << std::endl;

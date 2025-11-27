@@ -86,3 +86,53 @@ Current merkle hash list:
 
 Merkle Root Hash: 84f7ed5b2aa788e62a74e0f15b022bbe7d4de17229df8b6e34dbf8f066e4f792
 ````
+
+### Integration with LIDL hash
+To integrate libbitcoin with LIDL hash, I simply added the provided code to a class called `libbitcoinMerkle.cpp`. The most important part of that class is the converter to libbitcoin hash_digest as our hash previously just used a vector of strings. It then converts the merkle root BACK to a string when the program is finished.
+
+The converter is here:
+````
+std::string LibBitcoinMerkle::computeMerkleRoot(const std::vector<std::string> &data)
+{
+    //converts to libbitcoin format
+    bc::hash_list merkleList;
+    for (const auto &hexStr : data)
+    {
+        merkleList.push_back(stringToHashDigest(hexStr));
+    }
+
+    bc::hash_digest merkleRoot = create_merkle(merkleList);
+
+    return hashDigestToString(merkleRoot);
+}
+````
+
+You then need to use this long (and annoying) compile command:
+
+````
+clang++ -std=c++11 -Wno-enum-constexpr-conversion -Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib -o program Program.cpp Block.cpp BlockHeader.cpp Transaction.cpp libbitcoinMerkle.cpp customGenerator.cpp Functions.cpp -lomp $(pkg-config --cflags --libs libbitcoin-system)
+````
+
+And the code runs as expected. Both the libbitcoin and old code produce the same hash:
+
+````
+//libbitcoin
+Block 3
+Block Hash: 000057b72ddb1a8f875d5bc885afbdee16f75635ea4b403f80fbaf48567ce336
+Previous Hash: 000035e21186d0451ce57ef462b582e29c8a66f06902a53018b57ebea7802886
+Merkle Root: 67a6be6d96915444ae856c1c9c1f1eeea5a0282e6e92cf344ed3495f829b85f9
+Timestamp: 1766046951
+Difficulty: 4
+Nonce: 18159
+Transactions: 100
+
+//old code (our merkle root calculator)
+Block 3
+Block Hash: 000057b72ddb1a8f875d5bc885afbdee16f75635ea4b403f80fbaf48567ce336
+Previous Hash: 000035e21186d0451ce57ef462b582e29c8a66f06902a53018b57ebea7802886
+Merkle Root: 67a6be6d96915444ae856c1c9c1f1eeea5a0282e6e92cf344ed3495f829b85f9
+Timestamp: 1766046951
+Difficulty: 4
+Nonce: 18159
+Transactions: 100
+````

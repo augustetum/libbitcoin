@@ -37,13 +37,12 @@ private:
     bc::hash_digest stringToHashDigest(const std::string &hexStr) const;
     std::string hashDigestToString(const bc::hash_digest &hash) const;
 
-    // Build tree structure for compatibility with existing interface
+    // Tree structure for compatibility with existing interface
     std::shared_ptr<Node> buildTree(const std::vector<std::string> &hashes);
     void printNode(const std::shared_ptr<Node> &node, int depth) const;
     void getProofHelper(const std::shared_ptr<Node> &node, size_t index, size_t start, size_t end,
                         std::vector<std::string> &proof) const;
 
-    // Helper to compute merkle root using libbitcoin
     std::string computeMerkleRoot(const std::vector<std::string> &data);
 };
 
